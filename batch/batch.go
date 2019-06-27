@@ -33,8 +33,6 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-const baseURL = "https://www.googleapis.com/batch"
-
 type requestStatus int8
 
 const (
@@ -151,6 +149,7 @@ type Response struct {
 
 // Service for submitting batch
 type Service struct {
+    BaseURL string
 	// Is set to http.DefaultClient if nil.  An oauth2.Client may be used
 	// to authorize the requests or each individual request may have its
 	// own credential removing the need for an authorizing client.
@@ -308,7 +307,7 @@ func (s *Service) DoCtx(ctx context.Context) ([]Response, error) {
 	}
 
 	// Create req to send batches
-	req, err := http.NewRequest("POST", baseURL, outputBuf)
+	req, err := http.NewRequest("POST", s.BaseURL, outputBuf)
 	if err != nil {
 		return nil, err
 	}
