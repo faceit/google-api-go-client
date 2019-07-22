@@ -75,13 +75,13 @@ func (d *requestData) Error() string {
 
 // BatchClient is used to initiate a client api service.  All client api
 // requests return a batchData struct.
-var BatchClient = &http.Client{Transport: &batchIntercept{}}
+var BatchClient = &http.Client{Transport: &BatchIntercept{}}
 
-type batchIntercept struct{}
+type BatchIntercept struct{}
 
 // RoundTrip captures the client api call copying header, url and  body to a BatchItem
 // for later processing.
-func (bt *batchIntercept) RoundTrip(req *http.Request) (*http.Response, error) {
+func (bt *BatchIntercept) RoundTrip(req *http.Request) (*http.Response, error) {
 	// check for media upload as a batch request cannot contain a media upload
 	if strings.HasPrefix(req.URL.Path, "/upload") {
 		return nil, errors.New("BatchApi: Media Uploads not allowed for a BatchItem")
@@ -149,7 +149,7 @@ type Response struct {
 
 // Service for submitting batch
 type Service struct {
-    BaseURL string
+	BaseURL string
 	// Is set to http.DefaultClient if nil.  An oauth2.Client may be used
 	// to authorize the requests or each individual request may have its
 	// own credential removing the need for an authorizing client.
